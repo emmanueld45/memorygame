@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>Brain Hub — Cognitive Speed & Memory Training</title>
+  <meta name="description" content="Train your visual focus, working memory, spatial recall, and sequential memory with 4 brain training games." />
+  
+  <!-- PWA & Mobile Meta Tags -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0a0e17" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Brain Hub" />
+  <link rel="apple-touch-icon" href="favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=JetBrains+Mono:wght@700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Ambient background glow effects -->
+  <div class="bg-glow bg-glow-1"></div>
+  <div class="bg-glow bg-glow-2"></div>
+
+  <div class="app-wrapper">
+    <!-- ================= VIEW 0: GAME HUB (HOME) ================= -->
+    <main class="view-container" id="view-hub">
+      <header class="hub-header">
+        <div class="header-top-row">
+          <div class="header-left-actions">
+            <button id="btn-global-sound" class="icon-btn" title="Toggle Sound" aria-label="Toggle Sound">
+              <span class="icon" id="global-sound-icon">🔊</span>
+            </button>
+            <button id="btn-global-install" class="btn-install-header hidden" title="Install App to Home Screen">
+              <span class="install-icon">📲</span>
+              <span class="install-label">Install App</span>
+            </button>
+          </div>
+
+          <div class="hub-brand">
+            <span class="hub-logo-icon">🧠</span>
+            <h1 class="hub-title">BRAIN <span class="accent-text">HUB</span></h1>
+          </div>
+
+          <div class="header-right-actions">
+            <button id="btn-global-stats" class="icon-btn" title="All Game Stats" aria-label="View Statistics">
+              <span class="icon">📊</span>
+            </button>
+          </div>
+        </div>
+        <p class="hub-subtitle">Choose a brain training challenge to sharpen your mind</p>
+      </header>
+
+      <section class="game-selection-grid" role="list" aria-label="Available Memory Games">
+        <!-- Game 1: Focus 25 -->
+        <article class="game-card card-focus25" data-game="focus25" role="listitem" tabindex="0">
+          <div class="card-icon-box focus-glow">⚡</div>
+          <div class="card-content">
+            <div class="card-badge">Visual Speed</div>
+            <h2 class="card-title">Focus 25</h2>
+            <p class="card-desc">Scan & locate scattered numbers 1 to 25 before time expires.</p>
+            <div class="card-footer">
+              <span class="card-stat" id="hub-stat-focus">Best: --</span>
+              <span class="card-play-btn">Play →</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game 2: Chimp Test -->
+        <article class="game-card card-chimp" data-game="chimp" role="listitem" tabindex="0">
+          <div class="card-icon-box chimp-glow">🐒</div>
+          <div class="card-content">
+            <div class="card-badge">Working Memory</div>
+            <h2 class="card-title">Chimp Memory Test</h2>
+            <p class="card-desc">Numbers flash then turn blank. Tap in numerical order from memory.</p>
+            <div class="card-footer">
+              <span class="card-stat" id="hub-stat-chimp">Best Level: --</span>
+              <span class="card-play-btn">Play →</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game 3: Pattern Memory -->
+        <article class="game-card card-pattern" data-game="pattern" role="listitem" tabindex="0">
+          <div class="card-icon-box pattern-glow">🧩</div>
+          <div class="card-content">
+            <div class="card-badge">Spatial Memory</div>
+            <h2 class="card-title">Pattern Memory</h2>
+            <p class="card-desc">Memorize the flashing grid pattern and recreate it accurately.</p>
+            <div class="card-footer">
+              <span class="card-stat" id="hub-stat-pattern">Best Level: --</span>
+              <span class="card-play-btn">Play →</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Game 4: Sequence Recall -->
+        <article class="game-card card-sequence" data-game="sequence" role="listitem" tabindex="0">
+          <div class="card-icon-box sequence-glow">🚦</div>
+          <div class="card-content">
+            <div class="card-badge">Sequential Memory</div>
+            <h2 class="card-title">Sequence Recall</h2>
+            <p class="card-desc">Watch the glowing colored pads chime and repeat the sequence.</p>
+            <div class="card-footer">
+              <span class="card-stat" id="hub-stat-sequence">Best Streak: --</span>
+              <span class="card-play-btn">Play →</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- Professional Install App Prompt Banner -->
+      <div class="install-prompt-banner hidden" id="hub-install-banner">
+        <div class="install-banner-left">
+          <span class="install-app-icon">🧠</span>
+          <div class="install-banner-text">
+            <strong>Install Brain Hub</strong>
+            <span>Play full-screen with offline access!</span>
+          </div>
+        </div>
+        <div class="install-banner-actions">
+          <button class="btn btn-primary btn-sm" id="btn-banner-install">Install</button>
+          <button class="btn-dismiss-install" id="btn-banner-dismiss" aria-label="Dismiss">✕</button>
+        </div>
+      </div>
+
+      <footer class="hub-footer">
+        <p>🎯 Daily cognitive training improves focus, processing speed & memory capacity.</p>
+      </footer>
+    </main>
+
+    <!-- ================= VIEW 1: FOCUS 25 ================= -->
+    <section class="view-container game-view hidden" id="view-focus25">
+      <header class="game-navbar">
+        <button class="nav-back-btn btn-to-hub" title="Return to Hub">← Hub</button>
+        <div class="navbar-center">
+          <h2 class="navbar-title">FOCUS <span class="accent-text">25</span></h2>
+        </div>
+        <div class="navbar-right-group">
+          <button class="icon-btn btn-info-howtoplay" id="btn-focus-info" title="How to Play & Mode Guide">
+            <span>ℹ️</span>
+          </button>
+          <button class="icon-btn btn-toggle-sound" title="Toggle Sound">
+            <span class="sound-icon-display">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="status-bar">
+        <div class="streak-badge">
+          <span class="fire-icon">🔥</span>
+          <span id="focus-streak-count">0</span> Streak
+        </div>
+        <div class="target-indicator">
+          <span class="target-label">Target:</span>
+          <span class="target-value" id="focus-target-display">1 → 25</span>
+        </div>
+        <div class="best-badge">
+          <span class="trophy-icon">🏆</span>
+          <span id="focus-best-score">--</span>
+        </div>
+      </div>
+
+      <div class="game-arena">
+        <!-- Clear instructions pill -->
+        <div class="instructions-pill" id="focus-instruction-pill">
+          Locate numbers 1 → 25 with your eyes before time runs out!
+        </div>
+
+        <div class="timer-wrapper">
+          <div class="timer-display" id="focus-timer-display">00:25</div>
+          <div class="timer-progress-ring">
+            <div class="timer-progress-bar" id="focus-progress-bar"></div>
+          </div>
+        </div>
+
+        <div class="grid-wrapper">
+          <div class="number-grid" id="focus-grid"></div>
+          <div class="grid-overlay hidden" id="focus-overlay">
+            <div class="overlay-card">
+              <span class="overlay-icon">⚡</span>
+              <h3 class="overlay-title" id="focus-overlay-title">Ready to Focus?</h3>
+              <p class="overlay-desc" id="focus-overlay-desc">Locate numbers 1 to 25 with your eyes before the clock expires!</p>
+              <button class="btn btn-primary btn-lg" id="btn-focus-overlay-action">Start Focus</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-toolbar">
+          <button id="btn-focus-main" class="btn btn-primary btn-action">
+            <span class="btn-icon">▶</span>
+            <span id="btn-focus-main-text">Start Focus</span>
+          </button>
+          <button id="btn-focus-retry" class="btn btn-secondary btn-action" title="Retry exact same board layout">
+            <span class="btn-icon">🔄</span>
+            <span>Retry</span>
+          </button>
+          <button id="btn-focus-scramble" class="btn btn-secondary btn-action" title="Scramble numbers for a new game">
+            <span class="btn-icon">🎲</span>
+            <span>New</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="presets-bar">
+        <div class="preset-group">
+          <span class="preset-label">Timer:</span>
+          <div class="preset-buttons" id="focus-timer-presets">
+            <button class="preset-btn" data-time="15">15s</button>
+            <button class="preset-btn" data-time="20">20s</button>
+            <button class="preset-btn active" data-time="25">25s</button>
+            <button class="preset-btn" data-time="30">30s</button>
+            <button class="preset-btn" data-time="45">45s</button>
+          </div>
+        </div>
+        
+        <div class="preset-group">
+          <div class="mode-header-label">
+            <span class="preset-label">Play Mode</span>
+            <button class="btn-mode-help" id="btn-mode-quick-help" title="View mode explanations">?</button>
+          </div>
+          <div class="mode-toggles">
+            <button class="mode-btn active" id="focus-mode-scan" data-mode="scan" title="Look with eyes only without tapping">👁️ Eye Scan</button>
+            <button class="mode-btn" id="focus-mode-tap" data-mode="tap" title="Physically tap numbers 1 to 25">👆 Tap Mode</button>
+          </div>
+        </div>
+
+        <!-- Clean, dynamic mode descriptor pill -->
+        <div class="mode-desc-pill" id="focus-mode-desc-pill">
+          👁️ <strong>Eye Scan:</strong> Look with eyes only (no tapping). Self-assess at end.
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 2: CHIMP MEMORY TEST ================= -->
+    <section class="view-container game-view hidden" id="view-chimp">
+      <header class="game-navbar">
+        <button class="nav-back-btn btn-to-hub" title="Return to Hub">← Hub</button>
+        <div class="navbar-center">
+          <h2 class="navbar-title">CHIMP <span class="accent-text">TEST</span></h2>
+        </div>
+        <div class="navbar-right-group">
+          <button class="icon-btn btn-info-howtoplay" id="btn-chimp-info" title="How to Play Chimp Test">
+            <span>ℹ️</span>
+          </button>
+          <button class="icon-btn btn-toggle-sound" title="Toggle Sound">
+            <span class="sound-icon-display">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="status-bar">
+        <div class="level-badge">
+          <span class="badge-icon">⭐</span> Level: <strong id="chimp-level-display">1 (4 #s)</strong>
+        </div>
+        <div class="lives-indicator" id="chimp-lives-display">
+          <span class="heart-icon">❤️</span>
+          <span class="heart-icon">❤️</span>
+          <span class="heart-icon">❤️</span>
+        </div>
+        <div class="best-badge">
+          <span class="trophy-icon">🏆</span> Best: <strong id="chimp-best-display">--</strong>
+        </div>
+      </div>
+
+      <div class="game-arena">
+        <div class="instructions-pill" id="chimp-instruction-pill">
+          Memorize the numbers, then tap 1, 2, 3...
+        </div>
+
+        <div class="grid-wrapper">
+          <div class="chimp-grid" id="chimp-grid"></div>
+          <div class="grid-overlay" id="chimp-overlay">
+            <div class="overlay-card">
+              <span class="overlay-icon">🐒</span>
+              <h3 class="overlay-title" id="chimp-overlay-title">Chimp Memory Test</h3>
+              <p class="overlay-desc" id="chimp-overlay-desc">Test your photographic memory! Numbers will vanish when you tap #1. Tap them in ascending order.</p>
+              <button class="btn btn-primary btn-lg" id="btn-chimp-start">Start Test</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-toolbar single-btn">
+          <button id="btn-chimp-action" class="btn btn-primary btn-action full-width">
+            <span>Next Round</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 3: PATTERN MEMORY ================= -->
+    <section class="view-container game-view hidden" id="view-pattern">
+      <header class="game-navbar">
+        <button class="nav-back-btn btn-to-hub" title="Return to Hub">← Hub</button>
+        <div class="navbar-center">
+          <h2 class="navbar-title">PATTERN <span class="accent-text">MEMORY</span></h2>
+        </div>
+        <div class="navbar-right-group">
+          <button class="icon-btn btn-info-howtoplay" id="btn-pattern-info" title="How to Play Pattern Memory">
+            <span>ℹ️</span>
+          </button>
+          <button class="icon-btn btn-toggle-sound" title="Toggle Sound">
+            <span class="sound-icon-display">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="status-bar">
+        <div class="level-badge">
+          <span class="badge-icon">⭐</span> Level: <strong id="pattern-level-display">1</strong>
+        </div>
+        <div class="lives-indicator" id="pattern-lives-display">
+          <span class="heart-icon">❤️</span>
+          <span class="heart-icon">❤️</span>
+          <span class="heart-icon">❤️</span>
+        </div>
+        <div class="best-badge">
+          <span class="trophy-icon">🏆</span> Best: <strong id="pattern-best-display">--</strong>
+        </div>
+      </div>
+
+      <div class="game-arena">
+        <div class="instructions-pill" id="pattern-instruction-pill">
+          Remember the illuminated pattern!
+        </div>
+
+        <div class="grid-wrapper">
+          <div class="pattern-grid" id="pattern-grid"></div>
+          <div class="grid-overlay" id="pattern-overlay">
+            <div class="overlay-card">
+              <span class="overlay-icon">🧩</span>
+              <h3 class="overlay-title" id="pattern-overlay-title">Pattern Memory</h3>
+              <p class="overlay-desc" id="pattern-overlay-desc">A grid pattern will flash for a moment. Tap the exact squares to recreate it!</p>
+              <button class="btn btn-primary btn-lg" id="btn-pattern-start">Start Pattern</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-toolbar single-btn">
+          <button id="btn-pattern-action" class="btn btn-primary btn-action full-width">
+            <span>Next Level</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= VIEW 4: SEQUENCE RECALL (SIMON) ================= -->
+    <section class="view-container game-view hidden" id="view-sequence">
+      <header class="game-navbar">
+        <button class="nav-back-btn btn-to-hub" title="Return to Hub">← Hub</button>
+        <div class="navbar-center">
+          <h2 class="navbar-title">SEQUENCE <span class="accent-text">RECALL</span></h2>
+        </div>
+        <div class="navbar-right-group">
+          <button class="icon-btn btn-info-howtoplay" id="btn-sequence-info" title="How to Play Sequence Recall">
+            <span>ℹ️</span>
+          </button>
+          <button class="icon-btn btn-toggle-sound" title="Toggle Sound">
+            <span class="sound-icon-display">🔊</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="status-bar">
+        <div class="level-badge">
+          <span class="badge-icon">🎵</span> Score: <strong id="sequence-score-display">0</strong>
+        </div>
+        <div class="status-turn-pill" id="sequence-turn-pill">
+          👀 Watch!
+        </div>
+        <div class="best-badge">
+          <span class="trophy-icon">🏆</span> Best: <strong id="sequence-best-display">0</strong>
+        </div>
+      </div>
+
+      <div class="game-arena">
+        <div class="sequence-pads-wrapper" id="sequence-pads-wrapper">
+          <div class="simon-pad pad-green" data-pad="0" role="button" aria-label="Green Pad"></div>
+          <div class="simon-pad pad-red" data-pad="1" role="button" aria-label="Red Pad"></div>
+          <div class="simon-pad pad-yellow" data-pad="2" role="button" aria-label="Yellow Pad"></div>
+          <div class="simon-pad pad-blue" data-pad="3" role="button" aria-label="Blue Pad"></div>
+          <div class="simon-center-ring">
+            <span class="simon-center-text" id="simon-center-text">READY</span>
+          </div>
+
+          <div class="grid-overlay" id="sequence-overlay">
+            <div class="overlay-card">
+              <span class="overlay-icon">🚦</span>
+              <h3 class="overlay-title">Sequence Recall</h3>
+              <p class="overlay-desc">Watch the sequence of glowing lights and chime tones, then repeat it!</p>
+              <button class="btn btn-primary btn-lg" id="btn-sequence-start">Start Sequence</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-toolbar single-btn">
+          <button id="btn-sequence-restart" class="btn btn-secondary btn-action full-width">
+            <span>🔄 Restart Game</span>
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Focus 25 How-to-Play & Mode Comparison Modal -->
+  <div class="modal-backdrop hidden" id="modal-focus-info">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge celebration">⚡ Focus 25 Guide</span>
+        <h3 class="modal-title">How to Play & Modes</h3>
+        <button class="btn-close" id="btn-close-focus-info" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body mode-guide-body">
+        <div class="guide-mode-card mode-scan-card">
+          <div class="mode-card-header">
+            <span class="mode-card-icon">👁️</span>
+            <strong>Eye Scan Mode</strong>
+            <span class="mode-card-tag">Visual Speed</span>
+          </div>
+          <ul class="mode-card-points">
+            <li><strong>No touching:</strong> Keep hands off and trace numbers 1 to 25 with your eyes only.</li>
+            <li><strong>Timer Countdown:</strong> Clock ticks down while you scan as far as possible.</li>
+            <li><strong>Self-Assessment:</strong> When time's up, report the highest number reached to get your Focus Rating.</li>
+          </ul>
+        </div>
+
+        <div class="guide-mode-card mode-tap-card">
+          <div class="mode-card-header">
+            <span class="mode-card-icon">👆</span>
+            <strong>Tap Mode</strong>
+            <span class="mode-card-tag">Hand-Eye Speed</span>
+          </div>
+          <ul class="mode-card-points">
+            <li><strong>Physical click:</strong> Tap numbers 1 &rarr; 2 &rarr; 3... in ascending order.</li>
+            <li><strong>Live Feedback:</strong> Correct tiles dim with chime tones; wrong tiles shake.</li>
+            <li><strong>Auto Time Tracking:</strong> Records your exact speed in seconds when clearing all 25.</li>
+          </ul>
+        </div>
+
+        <div class="pro-tip-box">
+          💡 <strong>Pro Tip:</strong> Focus on the center tile to engage your <em>peripheral vision</em> instead of scanning row-by-row!
+        </div>
+      </div>
+      <div class="modal-actions single-action">
+        <button class="btn btn-primary full-width" id="btn-done-focus-info">Got It, Let's Play!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Chimp Memory Test Guide Modal -->
+  <div class="modal-backdrop hidden" id="modal-chimp-info">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge celebration">🐒 Working Memory Guide</span>
+        <h3 class="modal-title">How to Play Chimp Test</h3>
+        <button class="btn-close" id="btn-close-chimp-info" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body info-guide-body">
+        <div class="guide-step">
+          <span class="guide-num">1</span>
+          <div>
+            <strong>Memorize Numbers:</strong>
+            <p>Numbers 1 to N appear scattered across the 5x5 grid. Take a mental snapshot of where they are.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">2</span>
+          <div>
+            <strong>The Mystery Vanish:</strong>
+            <p>When you tap <strong>#1</strong>, all other numbers instantly turn into <strong>blank white squares</strong>!</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">3</span>
+          <div>
+            <strong>Tap from Memory:</strong>
+            <p>Tap the blank squares in ascending numerical order (<strong>2 &rarr; 3 &rarr; 4...</strong>) purely from memory.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">4</span>
+          <div>
+            <strong>3 Lives & Progression:</strong>
+            <p>You have <strong>3 Lives (❤️ ❤️ ❤️)</strong>. Each completed stage adds more scattered numbers!</p>
+          </div>
+        </div>
+        <div class="pro-tip-box">
+          💡 <strong>Pro Tip:</strong> Before tapping #1, trace the path 1 &rarr; 2 &rarr; 3 in your mind for 1 second.
+        </div>
+      </div>
+      <div class="modal-actions single-action">
+        <button class="btn btn-primary full-width" id="btn-done-chimp-info">Got It, Let's Play!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Pattern Memory Guide Modal -->
+  <div class="modal-backdrop hidden" id="modal-pattern-info">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge celebration">🧩 Spatial Memory Guide</span>
+        <h3 class="modal-title">How to Play Pattern Memory</h3>
+        <button class="btn-close" id="btn-close-pattern-info" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body info-guide-body">
+        <div class="guide-step">
+          <span class="guide-num">1</span>
+          <div>
+            <strong>Watch the Flash:</strong>
+            <p>A random pattern of glowing tiles illuminates for 1.8 seconds, then flips dark.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">2</span>
+          <div>
+            <strong>Recreate the Matrix:</strong>
+            <p>Tap the exact squares that were lit. Correct tiles turn green; wrong tiles trigger a strike (❤️).</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">3</span>
+          <div>
+            <strong>Grid Expansion:</strong>
+            <p>As you beat levels, the grid expands from <strong>3x3 &rarr; 4x4 &rarr; 5x5</strong> with more tiles to remember!</p>
+          </div>
+        </div>
+        <div class="pro-tip-box">
+          💡 <strong>Pro Tip:</strong> Group tiles into geometric shapes (corners, lines, clusters) rather than individual squares!
+        </div>
+      </div>
+      <div class="modal-actions single-action">
+        <button class="btn btn-primary full-width" id="btn-done-pattern-info">Got It, Let's Play!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Sequence Recall Guide Modal -->
+  <div class="modal-backdrop hidden" id="modal-sequence-info">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge celebration">🚦 Sequential Memory Guide</span>
+        <h3 class="modal-title">How to Play Sequence Recall</h3>
+        <button class="btn-close" id="btn-close-sequence-info" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body info-guide-body">
+        <div class="guide-step">
+          <span class="guide-num">1</span>
+          <div>
+            <strong>Watch & Listen:</strong>
+            <p>The glowing neon pads flash and chime a musical sequence of colors.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">2</span>
+          <div>
+            <strong>Repeat the Sequence:</strong>
+            <p>When <strong>"👆 Your Turn!"</strong> appears, tap the pads in the exact same chronological order.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">3</span>
+          <div>
+            <strong>Expanding Chain:</strong>
+            <p>Each round adds +1 new step to the sequence and speeds up tempo!</p>
+          </div>
+        </div>
+        <div class="pro-tip-box">
+          💡 <strong>Pro Tip:</strong> Hum the musical chime notes or whisper the colors in your head as they play!
+        </div>
+      </div>
+      <div class="modal-actions single-action">
+        <button class="btn btn-primary full-width" id="btn-done-sequence-info">Got It, Let's Play!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Focus 25 Self-Assessment Modal -->
+  <div class="modal-backdrop hidden" id="modal-assessment">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge">⏱️ Time's Up!</span>
+        <h3 class="modal-title">How far did you reach?</h3>
+        <p class="modal-subtitle">Self-evaluate your focus from 1 to 25</p>
+      </div>
+      <div class="modal-body">
+        <div class="reach-selector-card">
+          <label for="reach-slider" class="reach-label">Last number you spotted in order:</label>
+          <div class="reach-display-box">
+            <span class="reach-number" id="reach-value-display">25</span>
+            <span class="reach-total">/ 25</span>
+          </div>
+          <input type="range" id="reach-slider" class="styled-slider" min="1" max="25" value="25" step="1" />
+          <div class="slider-ticks">
+            <span>1</span><span>5</span><span>10</span><span>15</span><span>20</span><span>25</span>
+          </div>
+          <button class="btn btn-outline full-width" id="btn-quick-full">✨ I completed all 25!</button>
+        </div>
+        <div class="score-breakdown hidden" id="assessment-result-breakdown">
+          <div class="rating-badge" id="focus-rating-badge">Eagle Focus 🦅</div>
+          <p class="rating-description" id="focus-rating-desc">Incredible peripheral vision speed!</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-modal-retry-board">🔄 Retry Board</button>
+        <button class="btn btn-primary" id="btn-modal-new-game">🎲 New Scramble</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Generic Game Over / Results Modal -->
+  <div class="modal-backdrop hidden" id="modal-gameover">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge" id="gameover-badge">🎮 Game Over</span>
+        <h3 class="modal-title" id="gameover-title">Great Effort!</h3>
+        <p class="modal-subtitle" id="gameover-subtitle">Here is your cognitive score</p>
+      </div>
+      <div class="modal-body">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-lbl">Final Score</span>
+            <span class="stat-val accent" id="gameover-score-val">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-lbl">Personal Best</span>
+            <span class="stat-val text-success" id="gameover-best-val">0</span>
+          </div>
+        </div>
+        <div class="score-breakdown" id="gameover-feedback-box">
+          <div class="rating-badge" id="gameover-rating-badge">Sharp Mind ⚡</div>
+          <p class="rating-description" id="gameover-rating-desc">Keep training daily to expand your memory span!</p>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-secondary" id="btn-gameover-hub">🏠 Hub</button>
+        <button class="btn btn-primary" id="btn-gameover-retry">🔄 Play Again</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Stats Modal -->
+  <div class="modal-backdrop hidden" id="modal-global-stats">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">All-Time Brain Stats</h3>
+        <button class="btn-close" id="btn-close-global-stats" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="stats-grid">
+          <div class="stat-box">
+            <span class="stat-lbl">Focus 25 Streak</span>
+            <span class="stat-val accent" id="gstat-focus-streak">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-lbl">Chimp Best Level</span>
+            <span class="stat-val" id="gstat-chimp-level">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-lbl">Pattern Best Level</span>
+            <span class="stat-val" id="gstat-pattern-level">0</span>
+          </div>
+          <div class="stat-box">
+            <span class="stat-lbl">Sequence Max Streak</span>
+            <span class="stat-val text-success" id="gstat-sequence-streak">0</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-outline btn-sm text-danger" id="btn-reset-all-stats">Reset Stats</button>
+        <button class="btn btn-primary" id="btn-done-global-stats">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- iOS / Safari Add to Home Screen Instructions Modal -->
+  <div class="modal-backdrop hidden" id="modal-ios-install">
+    <div class="modal-card">
+      <div class="modal-header">
+        <span class="modal-badge celebration">📲 Install App</span>
+        <h3 class="modal-title">Add to Home Screen</h3>
+        <button class="btn-close" id="btn-close-ios-install" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body info-guide-body">
+        <div class="guide-step">
+          <span class="guide-num">1</span>
+          <div>
+            <strong>Tap the Share Button:</strong>
+            <p>Tap the <strong>Share</strong> icon (⎋) at the bottom or top of Safari.</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">2</span>
+          <div>
+            <strong>Select Add to Home Screen:</strong>
+            <p>Scroll down the menu and tap <strong>"Add to Home Screen"</strong> (➕).</p>
+          </div>
+        </div>
+        <div class="guide-step">
+          <span class="guide-num">3</span>
+          <div>
+            <strong>Confirm:</strong>
+            <p>Tap <strong>"Add"</strong> in the top right to install Brain Hub to your phone.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-actions single-action">
+        <button class="btn btn-primary full-width" id="btn-done-ios-install">Got It</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Canvas Confetti -->
+  <canvas id="confetti-canvas" class="confetti-canvas"></canvas>
+
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "Brain Hub — Cognitive & Memory Training",
+  "short_name": "Brain Hub",
+  "description": "Train visual focus, working memory, spatial recall, and sequential memory with 4 brain games.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0a0e17",
+  "theme_color": "#0a0e17",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["games", "education"]
+}
